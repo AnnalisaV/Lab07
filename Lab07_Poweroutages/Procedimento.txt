@@ -1,0 +1,12 @@
+in input ho : 
+-un NERC
+-un numero max di anni da considerare
+-un numero max di ore di disservizio da considerare
+
+in output voglio: 
+-sottoinsieme di eventi blackout che si sono verificati in quel max di anni e per un quel max 
+di ore di disservizio tali per cui si ha il max numero di eprsone coinvolte. 
+Set<EventType> che : max persone affected 
+                    ma anche controllo di volta in volta che sia max anni e max ore 
+
+               
