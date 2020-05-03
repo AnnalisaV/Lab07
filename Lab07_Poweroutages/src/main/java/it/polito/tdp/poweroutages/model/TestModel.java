@@ -10,7 +10,7 @@ public class TestModel {
 		//System.out.println(model.getNercList());
 		
 		
-		Set<PowerOutages> po= model.analisi(new Nerc(0, "PJM"), 200, 4); 
+		Set<PowerOutages> po= model.analisi(new Nerc(2, "HECO"), 200, 4); 
 		for (PowerOutages p : po) {
 			System.out.println(p+"\n"); 
 		}

@@ -9,8 +9,8 @@ public class PowerOutages {
 	private EventType eventType; 
 	private Nerc nerc; 
 	private int customerAffected; 
-	private LocalDate dataInizio; 
-	private LocalDate dataFine;
+	private LocalDateTime dataInizio; 
+	private LocalDateTime dataFine;
 	/**
 	 * @param id
 	 * @param eventType
@@ -19,8 +19,8 @@ public class PowerOutages {
 	 * @param dataInizio
 	 * @param dataFine
 	 */
-	public PowerOutages(int id, EventType eventType, Nerc nerc, int customerAffected, LocalDate dataInizio,
-			LocalDate dataFine) {
+	public PowerOutages(int id, EventType eventType, Nerc nerc, int customerAffected, LocalDateTime dataInizio,
+			LocalDateTime dataFine) {
 		super();
 		this.id = id;
 		this.eventType = eventType;
@@ -53,16 +53,22 @@ public class PowerOutages {
 	public void setCustomerAffected(int customerAffected) {
 		this.customerAffected = customerAffected;
 	}
-	public LocalDate getDataInizio() {
+	public LocalDateTime getDataInizio() {
 		return dataInizio;
 	}
-	public void setDataInizio(LocalDate dataInizio) {
+	public void setDataInizioTime (LocalDateTime dataInizio) {
 		this.dataInizio = dataInizio;
 	}
-	public LocalDate getDataFine() {
+	//descrizione
+	@Override
+	public String toString() {
+		return nerc.getValue()+" "+eventType.getValue()+" #clienti coinvolti "+customerAffected
+				 +" "+dataInizio+" , "+dataFine;
+	}
+	public LocalDateTime getDataFine() {
 		return dataFine;
 	}
-	public void setDataFine(LocalDate dataFine) {
+	public void setDataFineTime(LocalDateTime dataFine) {
 		this.dataFine = dataFine;
 	}
 	@Override

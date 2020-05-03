@@ -71,7 +71,7 @@ public class Model {
 		
 		// caso generico di ricorsione 
 		for (PowerOutages p : poDelNerc) {
-			if( adatto(p, parziale, ore, y ) && !parziale.contains(p)) {
+			if(!parziale.contains(p) && adatto(p, parziale, ore, y )) {
 				parziale.add(p); 
 				ricorsione(parziale, poDelNerc, livello+1, ore, y); 
 				parziale.remove(parziale.size()-1); // backtracking
@@ -98,13 +98,14 @@ public class Model {
 		// posso ancora stare nel limite max di ore di disservizio? (trasformate in sec per semplicita')
 		if (disservizio+disservP <= (disservOreMax*3600) ) {
 			
-			//verifica sull'anno 
+		//verifica sull'anno 
 			int max=0; 
-			int min=0; 
+			int min=9999; //devo mettere un numero grande altrimenti non trovero' mai un anno piccino
 			
-			parziale.add(p); 
+			Set<PowerOutages> parzialeNuova= new HashSet<>(parziale); //per non 'sporcare' quella che ho gia'
+			parzialeNuova.add(p); 
 			
-			for (PowerOutages pow: parziale) {
+			for (PowerOutages pow: parzialeNuova) {
 				if(pow.getDataFine().getYear() > max) {
 					max= pow.getDataFine().getYear(); 
 				}
@@ -115,6 +116,7 @@ public class Model {
 			if ((max-min )<= y) return true; 
 			
 			else return false; //allora  non torna il conto dell'anno
+			
 		}
 		
 		return false; // allora non torna il conto di ore disservizio
@@ -133,6 +135,14 @@ public class Model {
 			clienti+= p.getCustomerAffected(); 
 		}
 		return clienti;
+	}
+
+	public Map<Integer, EventType> getIdMapEventType() {
+		return idMapEventType;
+	}
+
+	public Map<Integer, Nerc> getIdMapNerc() {
+		return idMapNerc;
 	}
 	
 	
