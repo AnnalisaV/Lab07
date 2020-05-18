@@ -1,6 +1,7 @@
 package it.polito.tdp.poweroutages.model;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,7 @@ public class Model {
 	PowerOutageDAO podao;
 	Map<Integer, EventType> idMapEventType;
 	Map<Integer, Nerc> idMapNerc; 
-	Set <PowerOutages> migliore; 
+	List <PowerOutages> migliore; 
 	
 	public Model() {
 		podao = new PowerOutageDAO();
@@ -34,10 +35,10 @@ public class Model {
 	 * @param y     nuemro di anni coinvolti
 	 * @return elenco degli eventi che soddisfano tali criteri
 	 */
-	public Set<PowerOutages> analisi(Nerc n, int oreMax, int y){
+	public List<PowerOutages> analisi(Nerc n, int oreMax, int y){
 		this.migliore= null; 
 		List<PowerOutages> poDelNerc= this.podao.getPowerOutages(n, idMapEventType, idMapNerc);
-		Set<PowerOutages> parziale= new HashSet<>(); 
+		List<PowerOutages> parziale= new ArrayList<>(); 
 		
 		ricorsione(parziale,poDelNerc, 0 , oreMax, y);
 		return migliore; 
@@ -52,7 +53,7 @@ public class Model {
 	 * @param ore
 	 * @param y
 	 */
-	private void ricorsione(Set<PowerOutages> parziale, List<PowerOutages> poDelNerc, int livello, int ore, int y) {
+	private void ricorsione(List<PowerOutages> parziale, List<PowerOutages> poDelNerc, int livello, int ore, int y) {
 	
 		
 		// caso terminale 
@@ -62,7 +63,7 @@ public class Model {
 			// ma quella migliore? cioe' ha numero max di clienti coinvolti
 			if(this.migliore== null || calcola(parziale)>calcola(this.migliore)) {
 			// e' la soluzione migliore
-			this.migliore= new HashSet<>(parziale); 
+			this.migliore= new ArrayList<>(parziale); 
 			}
 		
 		return; // in ogni caso devo uscire perche' non ho piu' considerazioni da fare 
@@ -71,9 +72,11 @@ public class Model {
 		
 		// caso generico di ricorsione 
 		for (PowerOutages p : poDelNerc) {
-			if(!parziale.contains(p) && adatto(p, parziale, ore, y )) {
+			if(!parziale.contains(p) /*&& adatto(p, parziale, ore, y )*/) {
 				parziale.add(p); 
+				if (adatto(p, parziale, ore, y )){
 				ricorsione(parziale, poDelNerc, livello+1, ore, y); 
+				}
 				parziale.remove(parziale.size()-1); // backtracking
 				
 			}
@@ -85,12 +88,12 @@ public class Model {
 	 * @param p evento in questione
 	 * @return true se va inserito nella sequenza, false altrimenti
 	 */
-	private boolean adatto(PowerOutages p, Set<PowerOutages> parziale, int disservOreMax, int y) {
+	private boolean adatto(PowerOutages p, List<PowerOutages> parziale, int disservOreMax, int y) {
 		
 		
 		long disservizio=0; 
 		for (PowerOutages po : parziale ) {
-	    disservizio= Duration.between(po.getDataFine(), po.getDataInizio()).getSeconds(); // ottengo i seocndi di disservizio
+	    disservizio+= Duration.between(po.getDataFine(), po.getDataInizio()).getSeconds(); // ottengo i seocndi di disservizio
 			}
 		
 		long disservP= Duration.between(p.getDataFine(), p.getDataInizio()).getSeconds(); 
@@ -99,7 +102,7 @@ public class Model {
 		if (disservizio+disservP <= (disservOreMax*3600) ) {
 			
 		//verifica sull'anno 
-			int max=0; 
+		int max=0; 
 			int min=9999; //devo mettere un numero grande altrimenti non trovero' mai un anno piccino
 			
 			Set<PowerOutages> parzialeNuova= new HashSet<>(parziale); //per non 'sporcare' quella che ho gia'
@@ -127,7 +130,7 @@ public class Model {
 	 * @param parziale sottoinsieme di eventi blackout 
 	 * @return numero di clienti coinvolti
 	 */
-	private int calcola(Set<PowerOutages> parziale) {
+	public int calcola(List<PowerOutages> parziale) {
 		
 		int clienti=0; 
 		

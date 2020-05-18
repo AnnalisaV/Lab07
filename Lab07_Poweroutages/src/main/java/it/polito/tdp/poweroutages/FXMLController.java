@@ -82,12 +82,13 @@ public class FXMLController {
     		return; 
     	}
     	
-    	Set<PowerOutages> lista= this.model.analisi(this.comboBox.getValue(), oreMax, anniMax); 
+    	List<PowerOutages> lista= this.model.analisi(this.comboBox.getValue(), oreMax, anniMax); 
     	if (lista !=null) {
     		 txtResult.appendText("Eventi con maggior numero di clienti coinvolti : \n");
     		for (PowerOutages p : lista) {
     			txtResult.appendText(p+"\n");
     		}
+    		txtResult.appendText("Numero totale di vittime :"+this.model.calcola(lista));
     	}
     	else txtResult.appendText("Nessun risultato trovato!\n");
     }

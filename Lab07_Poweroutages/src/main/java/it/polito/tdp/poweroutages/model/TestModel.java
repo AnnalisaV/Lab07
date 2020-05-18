@@ -1,5 +1,6 @@
 package it.polito.tdp.poweroutages.model;
 
+import java.util.List;
 import java.util.Set;
 
 public class TestModel {
@@ -10,7 +11,7 @@ public class TestModel {
 		//System.out.println(model.getNercList());
 		
 		
-		Set<PowerOutages> po= model.analisi(new Nerc(2, "HECO"), 200, 4); 
+		List<PowerOutages> po= model.analisi(new Nerc(13, "MAIN"), 3, 3); 
 		for (PowerOutages p : po) {
 			System.out.println(p+"\n"); 
 		}
